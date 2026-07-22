@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css" />
+<link rel="alternate" type="application/rss+xml" title="Seeing Red RSS Feed" href="feed.xml" />
 </head>
 <body>
 
@@ -50,6 +51,14 @@
     </div>
 
     <aside>
+      <div class="widget" data-next-game-widget>
+        <h3>Next Game</h3>
+        <div class="widget-sub">Kickoff countdown</div>
+        <div data-next-game-body>
+          <p class="standings-error">Loading schedule…</p>
+        </div>
+      </div>
+
       <div class="widget" data-standings-widget>
         <h3>MLB Standings</h3>
         <div class="widget-sub">Reds highlighted below</div>
@@ -79,10 +88,12 @@
 <footer class="site-footer">
   <div class="container">
     <span class="logo-mark"></span>Seeing Red — an unofficial Cincinnati Reds fan blog. Standings data via MLB Stats API.
+    <a class="rss-link" href="feed.xml">RSS</a>
   </div>
 </footer>
 
 <script src="assets/js/seeing-red-meter.js"></script>
 <script src="assets/js/standings.js"></script>
+<script src="assets/js/next-game.js"></script>
 </body>
 </html>

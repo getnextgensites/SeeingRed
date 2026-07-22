@@ -7,12 +7,14 @@ A Cincinnati Reds recap blog. Plain HTML/CSS/JS — no build step, no server, no
 ```
 seeing-red/
 ├── index.html                          ← homepage: list of recaps + standings sidebar
+├── feed.xml                             ← RSS feed — add an <item> per new post
 ├── posts/
 │   └── post-template.html              ← duplicate this for every new recap
 └── assets/
     ├── css/styles.css                  ← all site styling (Reds red/black/white theme)
     └── js/
         ├── standings.js                ← live NL + AL standings widget
+        ├── next-game.js                ← next game countdown widget
         └── seeing-red-meter.js         ← the Seeing Red Meter gauge
 ```
 
@@ -28,7 +30,8 @@ seeing-red/
    ```
    Use 1–10, where 1 is "Fully Chill" and 10 is "Nuclear Meltdown." See the scale below.
 4. Open `index.html` and copy the `<article class="post-card">...</article>` block, paste it at the top of the post list (newest first), and update the link, headline, excerpt, result pill, and `data-mini-meter` score to match your new post.
-5. Save, commit, push. Done.
+5. Optional: add a matching `<item>` to `feed.xml` so RSS subscribers see the new post (see "RSS feed" below).
+6. Save, commit, push. Done.
 
 No CMS, no markdown conversion — just HTML files. You can open any of these files directly in a browser to preview before publishing.
 
@@ -53,6 +56,21 @@ The gauge and its color (green → yellow → orange → red → dark red) are d
 - If the API is temporarily unreachable, the widget shows a "couldn't load standings" message instead of breaking the page.
 
 The same widget markup is already on `index.html` and both post pages — copy that `<div class="widget" data-standings-widget>...</div>` block into any new page and it'll work automatically, no extra JS needed beyond the two `<script>` tags at the bottom of the file.
+
+## Next game countdown
+
+`assets/js/next-game.js` fetches the Reds' upcoming schedule from the same free MLB Stats API and shows a live countdown to first pitch — opponent, home/away, venue, and a days/hours/min/sec countdown that ticks in real time. If a game is currently in progress it swaps to a "LIVE NOW" message instead. No setup required — it just works once the site is live.
+
+## RSS feed
+
+`feed.xml` at the repo root is a plain RSS 2.0 file readers can subscribe to. Since there's no build step, you maintain it by hand alongside your posts:
+
+1. Open `feed.xml`.
+2. Copy the example `<item>` block (in the HTML comment) and fill in the title, link, pub date (RFC 822 format, e.g. `Wed, 22 Jul 2026 19:30:00 -0400`), and description.
+3. Paste it above the closing `</channel>` tag, newest post first.
+4. Also update the `<link>` near the top of the file to your real GitHub Pages URL once you know it.
+
+The homepage already links to `feed.xml` for feed readers to auto-discover, and there's an "RSS" link in the footer of every page.
 
 ## Publishing to GitHub Pages
 

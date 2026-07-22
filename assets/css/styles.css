@@ -537,3 +537,76 @@ tr.reds-row td:first-child {
   border-radius: 50%;
   margin-right: 6px;
 }
+
+.site-footer .rss-link {
+  margin-left: 10px;
+  color: var(--gray);
+}
+
+.site-footer .rss-link:hover {
+  color: var(--reds-red);
+}
+
+/* ---------- Next Game widget ---------- */
+
+.next-game-matchup {
+  font-family: "Oswald", Arial, sans-serif;
+  font-size: 18px;
+  color: var(--white);
+  text-align: center;
+  margin: 4px 0 2px;
+}
+
+.next-game-matchup .vs-at {
+  color: var(--gray);
+  font-size: 13px;
+  margin: 0 6px;
+  text-transform: uppercase;
+}
+
+.next-game-venue {
+  text-align: center;
+  color: var(--gray);
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+
+.next-game-live {
+  text-align: center;
+  color: var(--meter-red);
+  font-family: "Oswald", Arial, sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  padding: 10px 0;
+}
+
+.countdown-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.countdown-box {
+  background: var(--panel-light);
+  border: 1px solid #303030;
+  border-radius: 8px;
+  padding: 8px 4px;
+  width: 56px;
+  text-align: center;
+}
+
+.countdown-box .num {
+  font-family: "Oswald", Arial, sans-serif;
+  font-size: 22px;
+  color: var(--white);
+  line-height: 1;
+}
+
+.countdown-box .unit {
+  font-size: 9.5px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 3px;
+}
+

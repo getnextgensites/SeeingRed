@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+
+  <title>Seeing Red — A Cincinnati Reds Recap Blog</title>
+  <!-- TODO: update this to your real GitHub Pages URL -->
+  <link>https://YOUR-GITHUB-USERNAME.github.io/seeing-red/</link>
+  <description>Game-by-game Cincinnati Reds recaps, live standings, and the Seeing Red Meter — how mad should the fanbase be?</description>
+  <language>en-us</language>
+
+  <!-- ================================================================
+       ADD A NEW <item> BLOCK HERE FOR EVERY NEW POST, NEWEST FIRST.
+       Copy the example below, then update:
+         - <title>        the post headline
+         - <link>/<guid>  the full URL to the post (must match exactly)
+         - <pubDate>      RFC 822 format: Wed, 22 Jul 2026 19:30:00 -0400
+         - <description>  a 1-2 sentence summary (matches the homepage excerpt)
+       ================================================================
+
+  <item>
+    <title>[YOUR HEADLINE]</title>
+    <link>https://YOUR-GITHUB-USERNAME.github.io/seeing-red/posts/[YOUR-FILE-NAME].html</link>
+    <guid>https://YOUR-GITHUB-USERNAME.github.io/seeing-red/posts/[YOUR-FILE-NAME].html</guid>
+    <pubDate>[DAY, DD MON YYYY HH:MM:SS -0400]</pubDate>
+    <description>[ONE OR TWO SENTENCE SUMMARY OF THE GAME]</description>
+  </item>
+
+  -->
+
+</channel>
+</rss>
