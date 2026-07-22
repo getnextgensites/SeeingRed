@@ -16,6 +16,7 @@ seeing-red/
         ├── standings.js                ← live NL + AL standings widget
         ├── next-game.js                ← next game countdown widget
         ├── ops.js                       ← Reds hitters ranked by OPS (homepage only)
+        ├── pitching.js                  ← Reds pitchers ranked by ERA & WHIP (homepage only)
         ├── oaa.js                       ← Reds defense ranked by Outs Above Average (homepage only)
         └── seeing-red-meter.js         ← the Seeing Red Meter gauge
 ```
@@ -56,6 +57,12 @@ The gauge and its color (green → yellow → orange → red → dark red) are d
 The rank (e.g. "#22 of 412 in MLB") is built from scratch rather than pulled from MLB's official OPS leaderboard, on purpose: that official leaderboard only includes "qualified" hitters (roughly 300+ plate appearances, scaling with games played), so bench players and part-timers never show up there no matter how the results are limited. Instead, this widget pulls every team's active roster with hitting stats attached (one call per team, 30 total) and ranks every hitter across the majors itself. The OPS numbers are still 100% real MLB data — this just changes who gets compared.
 
 Anyone with fewer than 10 plate appearances is left out entirely (too small a sample to mean anything — think a single pinch-hit at-bat). Everyone else, regulars and bench players alike, gets a real rank.
+
+## Reds pitching — ERA & WHIP
+
+`assets/js/pitching.js` (homepage sidebar only) lists current Reds pitchers with **ERA** (earned run average) and **WHIP** (walks + hits per inning pitched), each with its own rank against the majors — e.g. "ERA #48 · WHIP 1.12 (#31) of 380." Both are plain official MLB stats, no estimation involved.
+
+Same reasoning as the OPS widget: MLB's official ERA/WHIP leaderboards only include "qualified" pitchers (enough innings to scale with games played), which would leave out most relievers. So this builds its own ranking from every team's active roster instead — 30 calls, one per team — so both starters and relief pitchers get a real rank. Anyone under 5 innings pitched is excluded (a single disaster or dominant outing shouldn't produce a headline ERA). Lower is better for both stats, and the color on the ERA number follows typical benchmarks: 3.50 or better is green, worse than 4.50 is red.
 
 ## Reds defense — Outs Above Average
 
