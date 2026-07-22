@@ -583,7 +583,7 @@ tr.reds-row td:first-child {
 .countdown-row {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 16px;
 }
 
 .countdown-box {
