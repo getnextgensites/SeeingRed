@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seeing Red — A Cincinnati Reds Recap Blog</title>
+<meta name="description" content="Game-by-game Cincinnati Reds recaps, plus live MLB standings and the Seeing Red Meter — how mad should the fanbase be?" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <div class="brand">
+      <span class="logo-mark"></span>
+      <div>
+        <h1 class="brand-title">Seeing<span> Red</span></h1>
+        <div class="brand-tag">A Cincinnati Reds Recap Blog</div>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Game recaps, straight from the bleachers.</h1>
+    <p>Every Reds game gets a recap, a box score, and an official Seeing Red Meter reading — how mad should the fanbase actually be? Live MLB standings, updated automatically, right there in the sidebar.</p>
+  </div>
+</section>
+
+<main class="container">
+  <div class="layout">
+
+    <div>
+      <div class="section-label">Latest Recaps</div>
+
+      <!-- ================================================
+           POST CARD — duplicate this block for each new
+           recap and update the href + fields. Newest first.
+           Paste new cards directly below this comment.
+           ================================================ -->
+
+      <p class="post-excerpt">No recaps yet — check back after the next game.</p>
+
+    </div>
+
+    <aside>
+      <div class="widget" data-standings-widget>
+        <h3>MLB Standings</h3>
+        <div class="widget-sub">Reds highlighted below</div>
+        <div class="league-toggle">
+          <button type="button" data-league-btn="NL" class="active">National League</button>
+          <button type="button" data-league-btn="AL">American League</button>
+        </div>
+        <div data-league-pane="NL" style="display:block;">
+          <p class="standings-error">Loading standings…</p>
+        </div>
+        <div data-league-pane="AL" style="display:none;"></div>
+        <div class="standings-updated" data-standings-updated></div>
+      </div>
+
+      <div class="widget">
+        <h3>About Seeing Red</h3>
+        <p style="font-size:13.5px; color:var(--gray-light); margin-top:8px;">
+          One recap after every Reds game. Wins, losses, questionable bullpen decisions —
+          all of it gets the Seeing Red Meter treatment.
+        </p>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span class="logo-mark"></span>Seeing Red — an unofficial Cincinnati Reds fan blog. Standings data via MLB Stats API.
+  </div>
+</footer>
+
+<script src="assets/js/seeing-red-meter.js"></script>
+<script src="assets/js/standings.js"></script>
+</body>
+</html>
