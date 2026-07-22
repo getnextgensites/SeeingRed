@@ -498,6 +498,14 @@ tr.reds-row td:first-child {
   text-overflow: ellipsis;
 }
 
+.ops-pos {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--gray);
+  text-transform: uppercase;
+  margin-left: 2px;
+}
+
 .ops-rank {
   font-size: 10.5px;
   color: var(--gray);

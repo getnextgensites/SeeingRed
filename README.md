@@ -16,6 +16,7 @@ seeing-red/
         ├── standings.js                ← live NL + AL standings widget
         ├── next-game.js                ← next game countdown widget
         ├── ops.js                       ← Reds hitters ranked by OPS (homepage only)
+        ├── oaa.js                       ← Reds defense ranked by Outs Above Average (homepage only)
         └── seeing-red-meter.js         ← the Seeing Red Meter gauge
 ```
 
@@ -53,6 +54,14 @@ The gauge and its color (green → yellow → orange → red → dark red) are d
 `assets/js/ops.js` (homepage sidebar only) lists the current Reds hitters sorted by **OPS** (on-base % + slugging %), a simple, widely-used measure of overall hitting production. Both the OPS number and each player's rank (e.g. "#22 of 148 in MLB") come straight from MLB's own live data — nothing is estimated or calculated on our end.
 
 Bench players with very few plate appearances are excluded (under 10 PA — too small a sample to mean much), and anyone MLB hasn't yet deemed "qualified" for its leaderboard is shown with their OPS but no rank.
+
+## Reds defense — Outs Above Average
+
+`assets/js/oaa.js` (homepage sidebar only) ranks current Reds fielders by **Outs Above Average (OAA)**, MLB's own live Statcast defensive metric — roughly, how many outs a fielder's range is worth compared to an average defender at that position. Positive is good, negative is below average.
+
+This isn't bWAR or dWAR. Those are Baseball-Reference's proprietary calculations, and Baseball-Reference has no public API and blocks scraping, so there's no legitimate way to pull their exact numbers — and unlike OPS, WAR can't be reasonably reconstructed from public data either (it needs baserunning models and replacement-level baselines that aren't published anywhere free). OAA is the closest honest, fully real substitute: it's MLB's own number, not an estimate.
+
+One thing to know: this widget pulls from Baseball Savant (`baseballsavant.mlb.com`), a different site than the MLB Stats API the rest of the page uses. If that site ever blocks direct browser requests, the widget shows a "couldn't load" message instead of breaking the page — same graceful-fallback pattern as the other widgets. Catchers and pitchers aren't included since Statcast doesn't publish OAA for those positions.
 
 ## The standings widget
 
