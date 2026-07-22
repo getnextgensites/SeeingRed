@@ -51,9 +51,11 @@ The gauge and its color (green → yellow → orange → red → dark red) are d
 
 ## Reds hitters — OPS
 
-`assets/js/ops.js` (homepage sidebar only) lists the current Reds hitters sorted by **OPS** (on-base % + slugging %), a simple, widely-used measure of overall hitting production. Both the OPS number and each player's rank (e.g. "#22 of 148 in MLB") come straight from MLB's own live data — nothing is estimated or calculated on our end.
+`assets/js/ops.js` (homepage sidebar only) lists the current Reds hitters sorted by **OPS** (on-base % + slugging %), a simple, widely-used measure of overall hitting production.
 
-Bench players with very few plate appearances are excluded (under 10 PA — too small a sample to mean much), and anyone MLB hasn't yet deemed "qualified" for its leaderboard is shown with their OPS but no rank.
+The rank (e.g. "#22 of 412 in MLB") is built from scratch rather than pulled from MLB's official OPS leaderboard, on purpose: that official leaderboard only includes "qualified" hitters (roughly 300+ plate appearances, scaling with games played), so bench players and part-timers never show up there no matter how the results are limited. Instead, this widget pulls every team's active roster with hitting stats attached (one call per team, 30 total) and ranks every hitter across the majors itself. The OPS numbers are still 100% real MLB data — this just changes who gets compared.
+
+Anyone with fewer than 10 plate appearances is left out entirely (too small a sample to mean anything — think a single pinch-hit at-bat). Everyone else, regulars and bench players alike, gets a real rank.
 
 ## Reds defense — Outs Above Average
 

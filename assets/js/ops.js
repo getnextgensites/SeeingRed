@@ -2,14 +2,21 @@
  * Seeing Red — Reds hitters, ranked by OPS
  *
  * OPS (on-base % + slugging %) is a simple, widely-used measure of a
- * hitter's overall production. This pulls each Reds hitter's live OPS
- * from the free public MLB Stats API, plus their official rank against
- * every qualified hitter in the majors this season.
+ * hitter's overall production. This builds its own full-league ranking
+ * by pulling every team's active roster with hitting stats embedded
+ * ("hydrated") in one call per team — 30 calls total, one per MLB club.
+ *
+ * Why not just use MLB's official OPS leaderboard? Because that endpoint
+ * only includes "qualified" hitters (roughly 300+ plate appearances,
+ * scaling with games played) — bench players and part-timers never show
+ * up there no matter how high you set the result limit. Building the
+ * ranking ourselves from every active roster means every Reds hitter with
+ * a meaningful number of plate appearances gets a real rank, not just the
+ * regulars.
  *
  * Data source: https://statsapi.mlb.com/api/v1
- *   - /teams/113/roster            Reds active roster
- *   - /people/{id}/stats           each hitter's season OPS
- *   - /stats/leaders                MLB-wide OPS leaderboard (for rank)
+ *   - /teams?sportId=1&activeStatus=Yes                  all 30 MLB teams
+ *   - /teams/{id}/roster?hydrate=person(stats(...))       roster + season OPS, one call per team
  */
 
 (function () {
@@ -24,16 +31,12 @@
     return year;
   }
 
-  function rosterUrl() {
-    return `https://statsapi.mlb.com/api/v1/teams/${REDS_TEAM_ID}/roster?rosterType=active`;
+  function teamsUrl() {
+    return `https://statsapi.mlb.com/api/v1/teams?sportId=1&activeStatus=Yes`;
   }
 
-  function playerStatsUrl(personId, season) {
-    return `https://statsapi.mlb.com/api/v1/people/${personId}/stats?stats=season&group=hitting&season=${season}`;
-  }
-
-  function leadersUrl(season) {
-    return `https://statsapi.mlb.com/api/v1/stats/leaders?leaderCategories=onBasePlusSlugging&season=${season}&sportId=1&statGroup=hitting&limit=300`;
+  function hydratedRosterUrl(teamId, season) {
+    return `https://statsapi.mlb.com/api/v1/teams/${teamId}/roster?rosterType=active&hydrate=person(stats(type=season,group=hitting,season=${season}))`;
   }
 
   async function fetchJson(url) {
@@ -42,55 +45,55 @@
     return res.json();
   }
 
+  function extractHitterFromRosterEntry(entry) {
+    if (!entry.position || entry.position.type === "Pitcher") return null;
+    const person = entry.person;
+    if (!person || !person.stats) return null;
+    const hittingSplit =
+      person.stats
+        .find((s) => s.group && s.group.displayName === "hitting") ?.splits?.[0];
+    if (!hittingSplit) return null;
+    const stat = hittingSplit.stat;
+    const pa = parseInt(stat.plateAppearances, 10) || 0;
+    if (pa < MIN_PLATE_APPEARANCES) return null;
+    const opsNum = parseFloat(stat.ops);
+    if (isNaN(opsNum)) return null;
+    return {
+      id: person.id,
+      name: person.fullName,
+      teamId: entry.parentTeamId,
+      opsDisplay: stat.ops,
+      opsNum,
+    };
+  }
+
   async function loadOps(widget) {
     const body = widget.querySelector("[data-ops-body]");
     const season = currentSeason();
 
     try {
-      // 1. Official MLB-wide OPS leaderboard — gives us a real rank
-      //    ("#22 of 148 in MLB") instead of anything self-calculated.
-      const leadersData = await fetchJson(leadersUrl(season));
-      const leaders =
-        (leadersData.leagueLeaders &&
-          leadersData.leagueLeaders[0] &&
-          leadersData.leagueLeaders[0].leaders) ||
-        [];
-      const totalQualified = leaders.length;
-      const rankById = new Map(
-        leaders.filter((l) => l.person).map((l) => [l.person.id, l.rank])
+      const teamsData = await fetchJson(teamsUrl());
+      const teamIds = (teamsData.teams || []).map((t) => t.id);
+
+      const rosterResults = await Promise.all(
+        teamIds.map((id) => fetchJson(hydratedRosterUrl(id, season)).catch(() => null))
       );
 
-      // 2. Reds roster — hitters only (pitchers excluded).
-      const rosterData = await fetchJson(rosterUrl());
-      const hitters = (rosterData.roster || []).filter(
-        (p) => p.position && p.position.type !== "Pitcher"
-      );
+      const allHitters = [];
+      rosterResults.forEach((data) => {
+        if (!data || !data.roster) return;
+        data.roster.forEach((entry) => {
+          const hitter = extractHitterFromRosterEntry(entry);
+          if (hitter) allHitters.push(hitter);
+        });
+      });
 
-      // 3. Each Reds hitter's own season OPS.
-      const statResults = await Promise.all(
-        hitters.map((p) => fetchJson(playerStatsUrl(p.person.id, season)).catch(() => null))
-      );
+      allHitters.sort((a, b) => b.opsNum - a.opsNum);
+      allHitters.forEach((h, i) => (h.rank = i + 1));
+      const totalRanked = allHitters.length;
 
-      const redsHitters = hitters
-        .map((p, i) => {
-          const data = statResults[i];
-          const split =
-            data && data.stats && data.stats[0] && data.stats[0].splits && data.stats[0].splits[0];
-          if (!split) return null;
-          const stat = split.stat;
-          const pa = parseInt(stat.plateAppearances, 10) || 0;
-          if (pa < MIN_PLATE_APPEARANCES) return null;
-          const opsNum = parseFloat(stat.ops);
-          if (isNaN(opsNum)) return null;
-          return {
-            id: p.person.id,
-            name: p.person.fullName,
-            opsDisplay: stat.ops,
-            opsNum,
-            rank: rankById.get(p.person.id) || null,
-          };
-        })
-        .filter(Boolean)
+      const redsHitters = allHitters
+        .filter((h) => h.teamId === REDS_TEAM_ID)
         .sort((a, b) => b.opsNum - a.opsNum);
 
       if (!redsHitters.length) {
@@ -101,14 +104,11 @@
       body.innerHTML = redsHitters
         .map((h) => {
           const colorClass = h.opsNum >= 0.8 ? "ops-good" : h.opsNum < 0.7 ? "ops-bad" : "ops-mid";
-          const rankLabel = h.rank
-            ? `#${h.rank} of ${totalQualified} in MLB`
-            : "Not enough PAs to qualify";
           return `
             <div class="ops-row">
               <div class="ops-name-block">
                 <div class="ops-name">${h.name}</div>
-                <div class="ops-rank">${rankLabel}</div>
+                <div class="ops-rank">#${h.rank} of ${totalRanked} in MLB</div>
               </div>
               <div class="ops-value ${colorClass}">${h.opsDisplay}</div>
             </div>`;
