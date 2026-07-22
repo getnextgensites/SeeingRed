@@ -15,6 +15,7 @@ seeing-red/
     └── js/
         ├── standings.js                ← live NL + AL standings widget
         ├── next-game.js                ← next game countdown widget
+        ├── ops-plus.js                  ← Reds hitters ranked by estimated OPS+ (homepage only)
         └── seeing-red-meter.js         ← the Seeing Red Meter gauge
 ```
 
@@ -46,6 +47,14 @@ No CMS, no markdown conversion — just HTML files. You can open any of these fi
 | 9–10 | Throwing Remotes / Nuclear Meltdown |
 
 The gauge and its color (green → yellow → orange → red → dark red) are driven entirely by the number you pass to `renderSeeingRedMeter()`. Pick whatever score feels right for how the game actually went — a blown save in the 9th probably deserves an 8+, a comfortable win is a 1 or 2.
+
+## Reds hitters — estimated OPS+
+
+`assets/js/ops-plus.js` (homepage sidebar only) ranks the current Reds hitters by **OPS+** — a park-and-league-adjusted hitting stat where 100 is league average, anything above is better than average, below is worse.
+
+One honest limitation: the free MLB Stats API doesn't expose official OPS+ (that exact number lives on Baseball-Reference, which has no public API). So this widget calculates a very close estimate itself using the standard formula — `100 × (OBP / league OBP + SLG / league SLG − 1)` — pulling live OBP/SLG for each Reds hitter and league-wide averages from MLB's own qualified-hitters data. It's accurate to within a couple points of Baseball-Reference's number for most players; the one thing it skips is their park-factor adjustment, which is why it's labeled "est." on the widget.
+
+Each Reds hitter also gets a rank against every qualified hitter in the majors (e.g. "#22 of 148 in MLB"). Bench players with very few plate appearances are either excluded (under 10 PA — too small a sample to mean anything) or shown without a rank if MLB hasn't deemed them "qualified" yet.
 
 ## The standings widget
 
